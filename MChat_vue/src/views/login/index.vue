@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="logo" :class="{active: showSign}">
-      <h3 class="title">Hi!Mchat</h3>
+      <h3 class="title">Hi，Mchat!</h3>
       <span class="begain" @click="handleShowSign">立即体验</span>
     </div>
     <div class="login-content" v-if="showSign">
@@ -10,10 +10,28 @@
         <span :class="{active: !isLogin}" @click="isLogin = false">注册</span>
       </div>
       <el-form ref="signForm" label-width="80" class="signForm" :rules="signRules" v-model="signForm">
-        <el-form-item prop="name"></el-form-item>
-        <el-form-item prop="password"></el-form-item>
-        <el-form-item prop="rePassword" v-if="!isLogin"></el-form-item>
+        <el-form-item prop="name">
+          <el-input v-model="signForm.name" placeholder="账号" size="medium">
+            <i class="el-icon-user" slot="prepend"></i>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="signForm.password" type="password" size="medium" placeholder="密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+            <i class="el-icon-lock" slot="prepend"></i>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="rePassword" type="password" v-if="!isLogin">
+          <el-input v-model="signForm.rePassword" type="password" size="medium" placeholder="确认密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+            <i class="el-icon-lock" slot="prepend"></i>
+          </el-input>
+        </el-form-item>
       </el-form>
+      <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin(isLogin)">{{isLogin ? '登录' : '注册'}}</el-button>
+      <div v-if="isLogin" class="login-form-others">
+            <hr style="float: left">
+            <span>第三方登录</span>
+            <hr style="float: right">
+          </div>
     </div>
   </div>
 </template>
@@ -35,6 +53,9 @@ export default {
     }
   },
   methods: {
+    handleShowSign () {
+      this.showSign = true
+    },
     handleLogin () {
       const params = Object.assign({}, this.loginForm)
       login(params).then(response => {
@@ -59,12 +80,79 @@ export default {
   top: 0;
   left: 0;
   overflow: hidden;
+  background-image: url(../../assets/images/background.jpeg);
+  background-size: 100% 100%;
+  .logo{
+    margin-top: 15%;
+    transform: translateY(0%);
+    transition: transform 0.5s;
+    text-align: center;
+    h3.title{
+      font-size: 38px;
+      color: #ffffff;
+      text-align: center;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+    span.begain{
+      color: #ffffff;
+      font-size: 20px;
+      animation: fide 3s infinite;
+      cursor: pointer;
+      text-align: center;
+    }
+    span.begain:hover{
+      opacity: 1;
+      animation-play-state: paused;
+    }
+    @keyframes fide {
+      0% {opacity: 1;}
+      50% {opacity: 0.3;}
+      100% {opacity: 1;}
+    }
+  }
+  .logo.active{
+    transform: translateY(-100%);
+  }
   .login-content {
-    position: relative;
-    width: 400px;
+    position: absolute;
+    width: 350px;
+    padding: 15px 25px 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    margin-left: -200px;
+    margin-top: -220px;
+    animation: move 1.5s;
+    @keyframes move{
+      0% {left: 0}
+      40% {left: 50%;}
+      40%, 100% {transform: translate(0%, 0%);}
+      50%,
+      70%,
+      90%{
+        transform: translate(-5px,-5px);
+      }
+      60%, 80%{
+        transform: translate(5px,5px);
+      }
+    }
+    .title{
+      display: flex;
+      justify-content: center;
+      margin-bottom: 35px;
+      span{
+        text-align: center;
+        width: 100px;
+      }
+      span.active{
+        color: #0099ff;
+      }
+      span + span{
+        border-left: 1px solid #d5d5d5;
+      }
+    }
     .login-form-btn {
       width: 100%;
       border-radius: 30px;
