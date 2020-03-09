@@ -1,70 +1,19 @@
 <template>
   <div class="login-container">
-    <div class="login-content">
-      <el-tabs type="border-card" style="width: 100%; border-radius: 10px">
-        <el-tab-pane label="登录">
-          <el-form
-            ref="loginForm"
-            :model="loginForm"
-            :rules="loginRules"
-            class="login-form"
-            label-position="left">
-            <el-form-item prop="account" class="login-form-input">
-              <el-input
-                ref="account"
-                v-model="loginForm.account"
-                placeholder="账号"
-                size="medium"
-                type="text">
-                <template slot="prepend">
-                  <i class="el-icon-user" />
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="password" class="login-form-input">
-              <el-input
-                ref="password"
-                v-model="loginForm.password"
-                placeholder="密码"
-                size="medium"
-                show-password>
-                <template slot="prepend">
-                  <i class="el-icon-lock" />
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-form>
-          <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin">登录</el-button>
-          <div class="login-form-others">
-            <hr style="float: left">
-            <span>第三方登录</span>
-            <hr style="float: right">
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="注册">
-          <el-form
-            ref="signUpForm"
-            :model="signUpForm"
-            :rules="signUpRules"
-            class="sign-up-form"
-            label-position="left"
-            label-width="70px">
-            <el-form-item label="手机">
-              <el-input v-model="signUpForm.phone" placeholder="请输入手机号" size="medium" style="width: 280px" />
-            </el-form-item>
-            <el-form-item label="用户名">
-              <el-input v-model="signUpForm.userName" placeholder="请输入用户名" size="medium" style="width: 280px" />
-            </el-form-item>
-            <el-form-item label="密码">
-              <el-input v-model="signUpForm.password" placeholder="请输入密码" size="medium" style="width: 280px" />
-            </el-form-item>
-            <el-form-item label="确认密码">
-              <el-input v-model="signUpForm.confirmPassword" placeholder="请确认密码" size="medium" style="width: 280px" />
-            </el-form-item>
-          </el-form>
-          <el-button size="medium" type="primary" class="login-form-btn" @click="handleSignUp">注册</el-button>
-        </el-tab-pane>
-    </el-tabs>
+    <div class="logo" :class="{active: showSign}">
+      <h3 class="title">Hi!Mchat</h3>
+      <span class="begain" @click="handleShowSign">立即体验</span>
+    </div>
+    <div class="login-content" v-if="showSign">
+      <div class="title">
+        <span :class="{active: isLogin}" @click="isLogin = true">登录</span>
+        <span :class="{active: !isLogin}" @click="isLogin = false">注册</span>
+      </div>
+      <el-form ref="signForm" label-width="80" class="signForm" :rules="signRules" v-model="signForm">
+        <el-form-item prop="name"></el-form-item>
+        <el-form-item prop="password"></el-form-item>
+        <el-form-item prop="rePassword" v-if="!isLogin"></el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -75,20 +24,14 @@ export default {
   name: 'login',
   data () {
     return {
-      loginForm: {
-        account: '',
-        password: ''
-      },
-      loginRules: {},
-      signUpForm: {
-        phone: '',
-        email: '',
-        userName: '',
+      signForm: {
+        name: '',
         password: '',
-        confirmPassword: '',
-        address: ''
+        rePassword: ''
       },
-      signUpRules: {}
+      signRules: {},
+      showSign: false,
+      isLogin: true
     }
   },
   methods: {
