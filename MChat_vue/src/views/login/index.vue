@@ -9,19 +9,19 @@
         <span :class="{active: isLogin}" @click="isLogin = true">登录</span>
         <span :class="{active: !isLogin}" @click="isLogin = false">注册</span>
       </div>
-      <el-form ref="signForm" label-width="80" class="signForm" :rules="signRules" v-model="signForm">
+      <el-form ref="signForm" label-width="80" class="signForm" :rules="signRules" :model="signForm">
         <el-form-item prop="name">
-          <el-input v-model="signForm.name" placeholder="账号" size="medium">
+          <el-input v-model.trim="signForm.name" placeholder="账号" size="medium">
             <i class="el-icon-user" slot="prepend"></i>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="signForm.password" type="password" size="medium" placeholder="密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+          <el-input v-model.trim="signForm.password" type="password" size="medium" placeholder="密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
             <i class="el-icon-lock" slot="prepend"></i>
           </el-input>
         </el-form-item>
         <el-form-item prop="rePassword" type="password" v-if="!isLogin">
-          <el-input v-model="signForm.rePassword" type="password" size="medium" placeholder="确认密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+          <el-input v-model.trim="signForm.rePassword" type="password" size="medium" placeholder="确认密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
             <i class="el-icon-lock" slot="prepend"></i>
           </el-input>
         </el-form-item>
@@ -41,13 +41,52 @@ import { login } from '@/api/login'
 export default {
   name: 'login',
   data () {
+    let validateName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入账号'))
+      } else {
+        let reg = /^[a-zA-Z0-9_]{2,8}$/
+        if (!reg.test(value)) {
+          callback(new Error('请输入2-8个字符数字或下划线组成的账号'))
+        } else {
+          callback()
+        }
+      }
+    }
+    let validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        let reg = /^[a-zA-Z0-9]{6,12}$/
+        if (!reg.test(value)) {
+          callback(new Error('请输入6-12位的数字字符组成的密码'))
+        } else {
+          callback()
+        }
+      }
+    }
+    let validateRePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else {
+        if (value !== this.signForm.password) {
+          callback(new Error('两次密码不一致'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       signForm: {
         name: '',
         password: '',
         rePassword: ''
       },
-      signRules: {},
+      signRules: {
+        name: [{validator: validateName, trigger: 'blur'}],
+        password: [{validator: validatePassword, trigger: 'blur'}],
+        rePassword: [{validator: validateRePassword, trigger: 'blur'}]
+      },
       showSign: false,
       isLogin: true
     }
@@ -56,7 +95,7 @@ export default {
     handleShowSign () {
       this.showSign = true
     },
-    handleLogin () {
+    handleLogin (flat) {
       const params = Object.assign({}, this.loginForm)
       login(params).then(response => {
         console.log(response.data)
