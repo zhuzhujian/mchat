@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 // import { config } from 'shelljs'
 
 const service = axios.create({
@@ -11,6 +13,9 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    if (store.getters.token) {
+      config.headers['Authorization'] = getToken()
+    }
     // do something before request is sent
     let href = window.location.hash.slice('1')
     if (href.indexOf('?') > -1) {
