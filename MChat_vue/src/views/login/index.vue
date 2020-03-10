@@ -6,8 +6,8 @@
     </div>
     <div class="login-content" v-if="showSign">
       <div class="title">
-        <span :class="{active: isLogin}" @click="isLogin = true">登录</span>
-        <span :class="{active: !isLogin}" @click="isLogin = false">注册</span>
+        <span :class="{active: isLogin}" @click="handleChoose(true)">登录</span>
+        <span :class="{active: !isLogin}" @click="handleChoose(false)">注册</span>
       </div>
       <el-form ref="signForm" label-width="80" class="signForm" :rules="signRules" :model="signForm">
         <el-form-item prop="name">
@@ -16,17 +16,17 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model.trim="signForm.password" type="password" size="medium" placeholder="密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+          <el-input v-model.trim="signForm.password" type="password" size="medium" placeholder="密码" @keyup.enter.native="handleLogin()" show-password>
             <i class="el-icon-lock" slot="prepend"></i>
           </el-input>
         </el-form-item>
         <el-form-item prop="rePassword" type="password" v-if="!isLogin">
-          <el-input v-model.trim="signForm.rePassword" type="password" size="medium" placeholder="确认密码" @keyup.enter.native="handleLogin(isLogin)" show-password>
+          <el-input v-model.trim="signForm.rePassword" type="password" size="medium" placeholder="确认密码" @keyup.enter.native="handleLogin()" show-password>
             <i class="el-icon-lock" slot="prepend"></i>
           </el-input>
         </el-form-item>
       </el-form>
-      <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin(isLogin)">{{isLogin ? '登录' : '注册'}}</el-button>
+      <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin()">{{isLogin ? '登录' : '注册'}}</el-button>
       <div v-if="isLogin" class="login-form-others">
             <hr style="float: left">
             <span>第三方登录</span>
@@ -95,14 +95,32 @@ export default {
     handleShowSign () {
       this.showSign = true
     },
-    handleLogin (flat) {
-      const params = Object.assign({}, this.loginForm)
-      login(params).then(response => {
-        console.log(response.data)
-      }).catch(reason => {
-        console.log(reason)
+    handleChoose (boolean) {
+      this.isLogin = boolean
+      this.resetValidata()
+    },
+    resetValidata () {
+      this.$refs.signForm.resetFields()
+      this.signForm.name = ''
+      this.signForm.password = ''
+      this.signForm.rePassword = ''
+    },
+    handleLogin () {
+      this.$refs.signForm.validate((valid) => {
+        if (valid) {
+          if (this.isLogin) {
+            const params = {account: this.signForm.name, password: this.signForm.password}
+            login(params).then(response => {
+              console.log(response.data)
+              this.$router.push('/main')
+            }).catch(reason => {
+              this.$message.error('登录失败')
+              console.log(reason)
+            })
+          }
+        } else {
+        }
       })
-      this.$router.push('/main')
     },
     handleSignUp () {
       console.log('signUp')
@@ -162,7 +180,7 @@ export default {
     top: 50%;
     left: 50%;
     margin-left: -200px;
-    margin-top: -220px;
+    margin-top: -240px;
     animation: move 1.5s;
     @keyframes move{
       0% {left: 0}
