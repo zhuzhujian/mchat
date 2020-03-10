@@ -3,7 +3,7 @@
 var mysql = require('mysql');
 var $dbConfig = require('../config/mysql');
 
-//利用线程池，避免开太多的线程，开销太大
+//利用线程池，避免开太多的线程开销太大
 var pool = mysql.createPool($dbConfig);
 
 /**
