@@ -26,7 +26,7 @@
           </el-input>
         </el-form-item>
       </el-form>
-      <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin()">{{isLogin ? '登录' : '注册'}}</el-button>
+      <el-button size="medium" type="primary" class="login-form-btn" @click="handleLogin()" :loading="btnLoading">{{isLogin ? '登录' : '注册'}}</el-button>
       <div v-if="isLogin" class="login-form-others">
             <hr style="float: left">
             <span>第三方登录</span>
@@ -88,7 +88,8 @@ export default {
         rePassword: [{validator: validateRePassword, trigger: 'blur'}]
       },
       showSign: false,
-      isLogin: true
+      isLogin: true,
+      btnLoading: false
     }
   },
   methods: {
@@ -108,6 +109,7 @@ export default {
     handleLogin () {
       this.$refs.signForm.validate((valid) => {
         if (valid) {
+          this.btnLoading = true
           if (this.isLogin) {
             const params = {account: this.signForm.name, password: this.signForm.password}
             login(params).then(response => {
@@ -116,9 +118,12 @@ export default {
             }).catch(reason => {
               this.$message.error('登录失败')
               console.log(reason)
+            }).finally(() => {
+              this.btnLoading = false
             })
           }
         } else {
+          return false
         }
       })
     },
