@@ -6,6 +6,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,7 @@ Vue.use(ElementUI, { locale, size: 'mini' })
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
