@@ -37,7 +37,7 @@ export default {
       console.log('edit Info')
     },
     loginOut () {
-      console.log('login out')
+      this.$store.dispatch('user/logout')
       this.$router.push('/')
     }
   }
