@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken')
 
 const secretKey = 'M_CHAT' // 密钥
-const createToken = (userName, password, expries) => {
+const createToken = (account, password, expries) => {
   const payload = {
-    userName: userName,
+    account: account,
     password: password
   };
   let token = jwt.sign(payload, secretKey, {expiresIn: expries});
