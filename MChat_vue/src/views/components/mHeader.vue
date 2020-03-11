@@ -26,8 +26,8 @@ export default {
   data () {
     return {
       userInfo: {
-        user_name: 'zhuzhijian',
-        signature: ''
+        user_name: this.$store.getters.user_name,
+        signature: this.$store.getters.signature
       },
       baseUrl: image
     }
@@ -35,6 +35,7 @@ export default {
   methods: {
     editInfo () {
       console.log('edit Info')
+      console.log(this.$store.getters.user_name)
     },
     loginOut () {
       this.$store.dispatch('user/logout')

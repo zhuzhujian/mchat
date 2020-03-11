@@ -188,7 +188,7 @@ export default {
     top: 50%;
     left: 50%;
     margin-left: -200px;
-    margin-top: -240px;
+    margin-top: -200px;
     animation: move 1.5s;
     @keyframes move{
       0% {left: 0}

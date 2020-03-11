@@ -3,7 +3,7 @@ import { login, getInfo } from '@/api/login'
 
 const state = {
   token: getToken(),
-  account: '',
+  account: 0,
   user_name: '',
   avatar: '',
   nick_name: '',
@@ -36,7 +36,7 @@ const mutations = {
   SET_SIGNATURE: (state, signture) => {
     state.signature = signture
   },
-  SET_PHONNE: (state, phone) => {
+  SET_PHONE: (state, phone) => {
     state.phone = phone
   },
   SET_EMAIL: (state, email) => {
@@ -60,19 +60,17 @@ const mutations = {
 }
 
 const actions = {
-  login ({commit}, userInfo) {
+  login ({commit, dispatch}, userInfo) {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
       login({account: account.trim(), password: password.trim()}).then(response => {
-        console.log(response)
         if (response.data) {
           const {data} = response
           const {token} = data
           commit('SET_TOKEN', token)
           if (response.code === 0) {
-            debugger
             setToken(token)
-            console.log('token', getToken())
+            dispatch('getInfo')
           }
         }
         resolve(response)
@@ -103,7 +101,8 @@ const actions = {
           province,
           city,
           town
-        } = data.user_info
+        } = data
+
         commit('SET_ACCOUNT', account)
         commit('SET_USER_NAME', user_name)
         commit('SET_AVATAR', avatar)
