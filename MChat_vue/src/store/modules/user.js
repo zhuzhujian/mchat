@@ -1,5 +1,8 @@
+import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login, getInfo } from '@/api/login'
+
 const state = {
-  token: '',
+  token: getToken(),
   account: '',
   user_name: '',
   avatar: '',
@@ -57,7 +60,84 @@ const mutations = {
 }
 
 const actions = {
+  login ({commit}, userInfo) {
+    const { account, password } = userInfo
+    return new Promise((resolve, reject) => {
+      login({account: account.trim(), password: password.trim()}).then(response => {
+        console.log(response)
+        if (response.data) {
+          const {data} = response
+          const {token} = data
+          commit('SET_TOKEN', token)
+          if (response.code === 0) {
+            debugger
+            setToken(token)
+            console.log('token', getToken())
+          }
+        }
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
+  getInfo ({commit, state}) {
+    return new Promise((resolve, reject) => {
+      getInfo().then((response) => {
+        const {data} = response
+        if (!data) {
+          reject(new Error('Verification failed, Please login again'))
+        }
+
+        const {
+          account,
+          user_name,
+          avatar,
+          nick_name,
+          signature,
+          phone,
+          email,
+          sex,
+          sign_up_time,
+          province,
+          city,
+          town
+        } = data.user_info
+        commit('SET_ACCOUNT', account)
+        commit('SET_USER_NAME', user_name)
+        commit('SET_AVATAR', avatar)
+        commit('SET_NICK_NAME', nick_name)
+        commit('SET_SIGNATURE', signature)
+        commit('SET_PHONE', phone)
+        commit('SET_EMAIL', email)
+        commit('SET_SEX', sex)
+        commit('SET_SIGN_UP_TIME', sign_up_time)
+        commit('SET_PROVINCE', province)
+        commit('SET_CITY', city)
+        commit('SET_TOWN', town)
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  logout ({commit}) {
+    return new Promise((resolve, reject) => {
+      commit('SET_TOKEN', '')
+      removeToken()
+      resolve()
+    })
+  },
+
+  resetToken ({ commit }) {
+    return new Promise(resolve => {
+      commit('SET_TOKEN', '')
+      removeToken()
+      resolve()
+    })
+  }
 }
 
 export default {
