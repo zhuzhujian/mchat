@@ -4,6 +4,10 @@ import login from '@/views/login'
 import main from '@/views/main'
 import personMain from '@/views/personal'
 import application from '@/views/application'
+
+import { Message } from 'element-ui'
+import { getToken } from '@/utils/auth'
+import store from '../store'
 Vue.use(Router)
 
 export const constantRoutes = [
@@ -36,5 +40,38 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+
+// 路由守卫保证userInfo不丢失
+const whiteList = ['/']
+router.beforeEach(async (to, from, next) => {
+  const hasToken = getToken()
+  if (hasToken) {
+    if (to.path === '/login') {
+      next({path: '/'})
+    } else {
+      const hasAccount = store.getters.account && store.getters.account !== 0
+      if (hasAccount) {
+        next()
+      } else {
+        try {
+          await store.dispatch('user/getInfo')
+          next({...to, replace: true})
+        } catch (error) {
+          await store.dispatch('user/resetToken')
+          Message.error(error || 'Has Error')
+          next(`/`)
+        }
+      }
+    }
+  } else {
+    if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
+      next()
+    } else {
+      // other pages that do not have permission to access are redirected to the login page.
+      next(`/`)
+    }
+  }
+})
 
 export default router
