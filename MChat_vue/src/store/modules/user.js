@@ -70,10 +70,13 @@ const actions = {
           commit('SET_TOKEN', token)
           if (response.code === 0) {
             setToken(token)
-            dispatch('getInfo')
+            dispatch('getInfo').then(() => resolve(response))
+          } else {
+            resolve(response)
           }
+        } else {
+          resolve(response)
         }
-        resolve(response)
       }).catch(error => {
         reject(error)
       })
