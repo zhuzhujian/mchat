@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { sign } from '@/api/login'
 export default {
   name: 'login',
   data () {
@@ -110,8 +111,8 @@ export default {
         if (valid) {
           this.btnLoading = true
           if (this.isLogin) {
-            const params = {account: this.signForm.name, password: this.signForm.password}
-            this.$store.dispatch('user/login', params).then(response => {
+            const data = {account: this.signForm.name, password: this.signForm.password}
+            this.$store.dispatch('user/login', data).then(response => {
               if (response.code === -1) {
                 this.$message.error('账号不存在或者密码错误，请重新登录')
               } else {
@@ -121,6 +122,31 @@ export default {
             }).catch(reason => {
               this.$message.error('登录失败')
               console.log(reason)
+            }).finally(() => {
+              this.btnLoading = false
+            })
+          } else {
+            const sign_up_time = new Date().getTime()
+            const data = {user_name: this.signForm.name, password: this.signForm.password, sign_up_time}
+            sign(data).then(response => {
+              if (response.code === -1) {
+                this.$message.error('注册失败')
+              } else {
+                this.$message.success(response.message)
+                this.isLogin = true
+                this.resetValidata()
+                this.signForm.name = response.data.account
+                this.$notify({
+                  title: '提示',
+                  message: `请记住登录账号${this.signForm.name}`,
+                  type: 'success',
+                  duration: 0
+                })
+              }
+            }).catch(reason => {
+              this.$message.error('注册失败')
+              console.log(reason)
+              this.btnLoading = false
             }).finally(() => {
               this.btnLoading = false
             })

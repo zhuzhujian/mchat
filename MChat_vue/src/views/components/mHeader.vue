@@ -6,12 +6,12 @@
       </el-col>
       <el-col>
         <el-row type="flex" justify="end">
-          <el-avatar :size="50" :src="baseUrl" @click.native.prevent="editInfo"></el-avatar>
-          <div class="signature">
+          <el-avatar :size="50" :src="baseUrl" @click.native.prevent="editInfo" alt="暂无头像"></el-avatar>
+          <div class="simple-info">
             <div>{{userInfo.user_name}}
               <el-button type="text" style="color: #ffffff" @click="loginOut">[退出]</el-button>
             </div>
-            <div>个性签名:{{userInfo.signature ? userInfo.signature : '这个人很懒，没有留下任何信息'}}</div>
+            <div class="signature">个性签名:{{userInfo.signature ? userInfo.signature : '这个人很懒，没有留下任何信息'}}</div>
           </div>
         </el-row>
       </el-col>
@@ -35,7 +35,6 @@ export default {
   methods: {
     editInfo () {
       console.log('edit Info')
-      console.log(this.$store.getters.user_name)
     },
     loginOut () {
       this.$store.dispatch('user/logout')
@@ -50,10 +49,16 @@ export default {
   height: 50px;
   background-color: rgb(51, 159, 175);
   vertical-align: middle;
-  .signature{
+  .simple-info{
     font-size: 12px;
     div{
       height: 50%;
+    }
+    .signature{
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }

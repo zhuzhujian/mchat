@@ -14,3 +14,11 @@ export function getInfo () {
     method: 'get'
   })
 }
+
+export function sign (data) {
+  return request({
+    url: 'user/signup',
+    method: 'post',
+    data
+  })
+}

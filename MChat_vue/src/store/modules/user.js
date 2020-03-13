@@ -63,7 +63,7 @@ const actions = {
   login ({commit, dispatch}, userInfo) {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({account: account.trim(), password: password.trim()}).then(response => {
+      login({account: account, password: password}).then(response => {
         if (response.data) {
           const {data} = response
           const {token} = data
