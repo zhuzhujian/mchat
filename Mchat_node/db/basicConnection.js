@@ -20,7 +20,7 @@ function query(sql, callback) {
         console.log('数据操作错误!');
         console.log(err);
       }
-      callback && callback(JSON.parse(JSON.stringify(rows)), JSON.parse(JSON.stringify(field)));
+      callback && callback(rows && JSON.parse(JSON.stringify(rows)), field && JSON.parse(JSON.stringify(field)));
     });
     connection.release(err => {
       if (err) {
@@ -45,7 +45,11 @@ function queryArgs(sql, args, callback) {
         console.log('数据操作错误!');
         console.log(err);
       }
-      callback && callback(JSON.parse(JSON.stringify(rows)), JSON.parse(JSON.stringify(field)));
+      if(rows){
+        callback && callback(JSON.parse(JSON.stringify(rows)), JSON.parse(JSON.stringify(field)));
+      } else {
+        callback && callback();
+      }
     });
     connection.end(err => {
       if (err) {
