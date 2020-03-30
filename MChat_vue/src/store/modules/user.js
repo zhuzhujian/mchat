@@ -128,6 +128,7 @@ const actions = {
   logout ({commit}) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
+      commit('SET_ACCOUNT', 0)
       removeToken()
       resolve()
     })
