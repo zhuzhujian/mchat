@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from '@/views/login'
-import main from '@/views/main'
-import personMain from '@/views/personal'
-import application from '@/views/application'
 
 import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth'
@@ -14,22 +10,46 @@ export const constantRoutes = [
   {
     path: '/',
     name: 'login',
-    component: login
+    component: () => import('@/views/login')
   },
   {
     path: '/main',
     name: 'main',
-    component: main,
+    component: () => import('@/views/main'),
     redirect: '/main/personMain',
     children: [{
-      path: '/main/personMain',
+      path: 'personMain',
       name: 'personMain',
-      component: personMain
+      component: () => import('@/views/personal'),
+      redirect: 'personMain/friendly',
+      children: [{
+        path: 'friendly',
+        name: 'friendly',
+        component: () => import('@/views/personal/components/friendly'),
+        redirect: 'friendly/own',
+        children: [
+          {
+            path: 'own',
+            name: 'myFriend',
+            component: () => import('@/views/personal/components/myFriend')
+          },
+          {
+            path: 'search',
+            name: 'searchName',
+            component: () => import('@/views/personal/searchFriend')
+          }
+        ]
+      },
+      {
+        path: 'group',
+        name: 'group',
+        component: () => import('@/views/group/')
+      }]
     },
     {
       path: '/main/application',
       name: 'application',
-      component: application
+      component: () => import('@/views/application')
     }]
   }
 ]
