@@ -24,6 +24,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+var io = require('socket.io').listen(server)
 
 server.listen(port);
 server.on('error', onError);
@@ -88,3 +89,14 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+// socket event listen
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.emit('test', 'hello world');
+  socket.on('connection', (data) => {
+    console.log(data);
+  })
+});
+io.on('disconnection', () => {
+  console.log('user disconnected');
+})
