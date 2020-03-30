@@ -7,10 +7,18 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import store from './store'
+import VueSocketIO from 'vue-socket.io'
+// import socketio from 'socket.io-client'
+import libs from '@/libs'
 
 Vue.config.productionTip = false
 
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: 'http://localhost:3000'
+}))
 Vue.use(ElementUI, { locale, size: 'mini' })
+Vue.use(libs)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
