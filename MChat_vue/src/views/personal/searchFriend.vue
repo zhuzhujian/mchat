@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <m-apheader title="添加好友" back="/main/personMain/friendly/own"></m-apheader>
+    <m-apheader title="添加好友" back="-1"></m-apheader>
     <div class="search">
       <el-select v-model="type" placeholder="搜索方式">
         <el-option
@@ -19,16 +19,16 @@
     </div>
     <div class="mchat-linkman-container">
       <ul class="mchat-linkman-list" v-show="userList.length">
-        <li v-for="item in userList" :key="item['_id']" @click="goFriendDetail(item['_id'])">
+        <li v-for="item in userList" :key="item['account']" @click="goFriendDetail(item)">
           <a href="javascript:;">
-            <img :src="'#'" alt="">
+            <img :src="item.avatar" alt="">
           </a>
           <div>
             <p>
-              <span class="vchat-line1" :title="item.nickname">{{item.nickname}}</span>
+              <span class="vchat-line1" :title="item.nickname">{{item.user_name}}</span>
             </p>
             <p>
-              <span :title="v.signature" class="mchat-line1">{{item.signature}}</span>
+              <span :title="item.signature" class="mchat-line1">{{item.signature}}</span>
             </p>
           </div>
         </li>
@@ -68,7 +68,16 @@ export default {
       let data = {type: this.type, huntKey: this.huntKey}
       console.log(data)
       searchUser(data).then(res => {
-        this.userList = res.data.slice(0)
+        if (res.code === -1) {
+          this.$message({type: 'error', message: res.message})
+        } else {
+          let list = res.data
+          console.log(list)
+          list.forEach(item => {
+            item.avatar = process.env.IMG_URL + item.avatar
+          })
+          this.userList = list
+        }
       })
     },
     goFriendDetail (id) {
@@ -93,6 +102,46 @@ export default {
   }
   .mchat-linkman-container{
     height: calc(100% - 30px);
+    .mchat-linkman-list{
+      list-style: none;
+      padding-left: 0;
+      font-size: 14px;
+      width: 100%;
+      margin: 0;
+      li{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+        a {
+          width: 35px;
+          height: 35px;
+          display: inline-block;
+          border-radius: 50%;
+          overflow: hidden;
+          margin-right: 5px;
+          img{
+            width: 35px;
+          }
+        }
+        div{
+          width:calc(100% - 50px);
+          font-size: 14px;
+          color: #a3a3a3;
+          text-align: left;
+          display: flex;
+          justify-content: space-between;
+          span{
+            max-width: 160px;
+            cursor: pointer;
+          }
+        }
+      }
+      li:hover{
+        background-color: #f5f5f5;
+      }
+      }
   }
 }
 </style>

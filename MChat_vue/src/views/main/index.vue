@@ -1,6 +1,6 @@
 <template>
   <div class="mchat-main">
-    <m-header></m-header>
+    <m-header :base-url="avatar"></m-header>
     <div class="mchat-content">
       <div class="mchat-content-nav">
         <ul>
@@ -37,8 +37,11 @@ export default{
         class: 'el-icon-menu',
         id: 2,
         link: 'application'
-      }]
+      }],
+      avatar: process.env.IMG_URL + this.$store.getters.avatar
     }
+  },
+  created () {
   },
   methods: {}
 }

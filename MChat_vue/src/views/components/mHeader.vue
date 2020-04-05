@@ -20,16 +20,15 @@
 </template>
 
 <script>
-import image from '@/assets/images/avatar.jpeg'
 export default {
   name: 'MHeader',
+  props: ['baseUrl'],
   data () {
     return {
       userInfo: {
         user_name: this.$store.getters.user_name,
         signature: this.$store.getters.signature
-      },
-      baseUrl: image
+      }
     }
   },
   methods: {
