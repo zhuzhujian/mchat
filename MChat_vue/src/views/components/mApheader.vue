@@ -63,7 +63,7 @@ export default {
       display: inline-block;
       width: 24px;
       height: 24px;
-      color: #000;
+      color: #fff;
     }
   }
   .icon-slot{
