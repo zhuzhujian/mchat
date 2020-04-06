@@ -7,3 +7,11 @@ export function searchUser (params) {
     params
   })
 }
+
+export function getUser (params) {
+  return request({
+    url: 'info/getUser',
+    method: 'get',
+    params
+  })
+}
