@@ -9,6 +9,7 @@ var app = express();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
+var friendRouter = require('./routes/friend');
 
 
 //设置跨域访问
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/info', usersRouter);
 app.use('/user', loginRouter);
+app.use('/friend', friendRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
