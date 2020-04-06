@@ -17,11 +17,28 @@ router.get('/search',function(req,res,next) {
         res.send({data, message: '查询成功', code: 0})
       })
     }else{
-      console.log(data.type)
+      let sql = `select * from user where account = '${data.huntKey}'`
+      mysql.query(sql, (args,feild) => {
+        let data = args;
+        res.send({data, message: '查询成功', code: 0})
+      })
     }
   }else{
     res.send({code: -1, message: '缺少type参数，请选择查询的类型'})
   }
 })
 
+//获取好友信息
+router.get('/getUser', function (req, res, next) {
+  let data = req.query
+  if(data.account){
+    let sql = `select * from user where account = '${data.account}'`
+    mysql.query(sql, (args, feild) => {
+      let data = args;
+      res.send({data, message: '查询成功', code: 0})
+    })
+  }else{
+    res.send({code: -1, message: '请求参数错误'})
+  }
+})
 module.exports = router;
