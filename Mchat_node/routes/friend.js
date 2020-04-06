@@ -35,4 +35,23 @@ router.get('/isFriend', function (req,res,next){
   }
 })
 
+router.post('/addFriend', (req, res, next) => {
+  const token = req.headers.authorization;
+  let verify = Token.verifyToken(token);
+  let friend_id = req.query.account;
+  if (verify === 'Token Invalid'){
+    res.send({code: -1, message: '登录超时'});
+  } else {
+    let obj = {user_id: verify.account, friend_id: friend_id, type: 1};
+    let sql = friendList.insert(obj);
+    mysql.query(sql, (args, feild) => {
+      if(args){
+        res.send({code: 0, message: '添加成功'})
+      }else{
+        res.send({code: -1, message: '添加失败，该用户已经是好友'})
+      }
+    })
+  }
+})
+
 module.exports = router
