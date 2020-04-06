@@ -53,6 +53,7 @@ export default {
       type: '',
       huntKey: '',
       userList: [],
+      searchLoading: false,
       searchOptions: [{
         value: 1,
         label: '昵称'
@@ -65,23 +66,24 @@ export default {
   },
   methods: {
     huntFriends (event) {
+      this.searchLoading = true
       let data = {type: this.type, huntKey: this.huntKey}
-      console.log(data)
       searchUser(data).then(res => {
         if (res.code === -1) {
           this.$message({type: 'error', message: res.message})
         } else {
           let list = res.data
-          console.log(list)
           list.forEach(item => {
             item.avatar = process.env.IMG_URL + item.avatar
           })
           this.userList = list
         }
+      }).finally(() => {
+        this.searchLoading = false
       })
     },
-    goFriendDetail (id) {
-      console.log('detail')
+    goFriendDetail (item) {
+      this.$router.push({name: 'friendDetial', params: {id: item.account}})
     }
   }
 }
