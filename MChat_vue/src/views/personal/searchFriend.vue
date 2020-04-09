@@ -17,11 +17,11 @@
         <i slot="append" class="el-input__icon el-icon-search" @click="huntFriends('click')"></i>
       </el-input>
     </div>
-    <div class="mchat-linkman-container">
+    <div class="mchat-linkman-container" v-loading="searchLoading">
       <ul class="mchat-linkman-list" v-show="userList.length">
         <li v-for="item in userList" :key="item['account']" @click="goFriendDetail(item)">
           <a href="javascript:;">
-            <img :src="item.avatar" alt="">
+            <img :src="IMG_URL + item.avatar" alt="">
           </a>
           <div>
             <p>
@@ -61,7 +61,8 @@ export default {
       {
         value: 2,
         label: '账号'
-      }]
+      }],
+      IMG_URL: process.env.IMG_URL
     }
   },
   methods: {
@@ -73,9 +74,6 @@ export default {
           this.$message({type: 'error', message: res.message})
         } else {
           let list = res.data
-          list.forEach(item => {
-            item.avatar = process.env.IMG_URL + item.avatar
-          })
           this.userList = list
         }
       }).finally(() => {

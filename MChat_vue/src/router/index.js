@@ -39,7 +39,7 @@ export const constantRoutes = [
             component: () => import('@/views/personal/searchFriend')
           },
           {
-            path: 'detial',
+            path: 'detial/:id',
             name: 'friendDetial',
             component: () => import('@/views/personal/detailFriend')
           }

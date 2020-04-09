@@ -4,7 +4,7 @@
     <div class="friend-info">
       <div class="info-header">
         <a class="friend-avatar" href="javascript:;">
-          <img :src="friendInfo.avatar" alt="">
+          <img :src="IMG_URL + friendInfo.avatar" alt="">
         </a>
         <span class="friend-major">
           <p>{{friendInfo.user_name}}</p>
@@ -37,7 +37,7 @@
 
 <script>
 import {getUser} from '@/api/user'
-import {isFriend} from '@/api/friend'
+import {isFriend, addFriend} from '@/api/friend'
 import mApheader from '@/views/components/mApheader.vue'
 export default {
   name: 'detailFriend',
@@ -45,12 +45,12 @@ export default {
   data () {
     return {
       friendInfo: {},
-      isMyFriend: false
+      isMyFriend: false,
+      IMG_URL: process.env.IMG_URL
     }
   },
   created () {
     this.getFriendInfo()
-    this.isFriend()
   },
   methods: {
     getFriendInfo () {
@@ -58,8 +58,8 @@ export default {
       getUser({account: account.id}).then(res => {
         if (res.code === 0) {
           let data = res.data[0]
-          data.avatar = process.env.IMG_URL + data.avatar
           this.friendInfo = data
+          this.isFriend()
         } else {
           this.$router.goto(-1)
         }
@@ -77,9 +77,16 @@ export default {
       })
     },
     handleAddFriend () {
-
+      let account = this.friendInfo.account
+      addFriend({account}).then(res => {
+        if (res.code === 0) {
+          this.$message({type: 'success', message: res.message})
+        } else {
+          this.$message({type: 'error', message: res.message})
+        }
+      })
     },
-    handleDleFriend () {
+    handleDelFriend () {
 
     },
     handleSendMes () {}

@@ -7,3 +7,18 @@ export function isFriend (params) {
     params
   })
 }
+
+export function addFriend (data) {
+  return request({
+    url: 'friend/addFriend',
+    method: 'post',
+    data
+  })
+}
+
+export function getFriendList () {
+  return request({
+    url: 'friend/friendList',
+    method: 'get'
+  })
+}

@@ -11,16 +11,16 @@
     <div class="mchat-friend-container">
       <div class="mchat-manlist-conatainer" v-if="friendList.length">
         <ul class="mchat-manlist-list">
-          <li v-for="item in friendList" :key="item.id" @click="goFriendDetail(item.id)">
+          <li v-for="item in friendList" :key="item.account" @click="goFriendDetail(item.account)">
             <a href="javascript:;">
-              <img :src="item.path" alt="">
+              <img :src="item.avatar" alt="">
             </a>
             <div>
               <p>
-                <span class="mchat-name">{{item.name}}</span>
+                <span class="mchat-name">{{item.user_name}}</span>
               </p>
               <p>
-                <span class="mchat-signatrue">{{item.signatrue}}</span>
+                <span class="mchat-signatrue">{{item.signature}}</span>
               </p>
             </div>
           </li>
@@ -37,7 +37,7 @@
 
 <script>
 import MApheader from '@/views/components/mApheader.vue'
-import img from '@/assets/images/avatar.jpeg'
+import {getFriendList} from '@/api/friend'
 export default {
   name: 'MyFriend',
   components: {
@@ -45,18 +45,28 @@ export default {
   },
   data () {
     return {
-      friendList: [
-        {id: 1, name: 'test', signatrue: 'i have no idea', path: img}
-      ]
+      friendList: [],
+      IMG_URL: process.env.IMG_URL
     }
   },
+  created () {
+    this.getFriendList()
+  },
   methods: {
+    getFriendList () {
+      getFriendList().then(res => {
+        if (res.code === 0) {
+          let data = res.friendList
+          this.friendList = data
+        }
+      })
+    },
     handleCommand (command) {
       console.log('command:' + command)
       this.$router.push(command)
     },
     goFriendDetail (id) {
-      console.log('get room id')
+      this.$router.push({name: 'friendDetial', params: {id: id}})
     }
   }
 }

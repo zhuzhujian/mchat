@@ -38,7 +38,7 @@ router.get('/isFriend', function (req,res,next){
 router.post('/addFriend', (req, res, next) => {
   const token = req.headers.authorization;
   let verify = Token.verifyToken(token);
-  let friend_id = req.query.account;
+  let friend_id = req.body.account;
   if (verify === 'Token Invalid'){
     res.send({code: -1, message: '登录超时'});
   } else {
@@ -54,4 +54,22 @@ router.post('/addFriend', (req, res, next) => {
   }
 })
 
+router.get('/FriendList', (req, res, next) => {
+  const token = req.headers.authorization;
+  let verify = Token.verifyToken(token);
+  if (verify === 'Token Invalid'){
+    res.send({code: -1, message: '登录超时'});
+  } else {
+    let value = verify.account;
+    let sql = `select account, user_name, password, avatar, signature, phone, email, sex, sign_up_time, province, city, town, type from user left join friend_list on user.account = friend_list.friend_id where user_id = ${value}`
+    mysql.query(sql, (args, feild) => {
+      if(args){
+        let data = args;
+        res.send({code: 0, message: '获取成功', friendList: data})
+      }else{
+        res.send({code: -1, message: '获取失败'})
+      }
+    })
+  }
+})
 module.exports = router
