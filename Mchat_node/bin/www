@@ -89,14 +89,11 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var con = require('../utils/socket')
+const onlineUser = {}
 // socket event listen
-io.on('connection', function(socket){
-  console.log('a user connected');
-  socket.emit('test', 'hello world');
-  socket.on('connection', (data) => {
-    console.log(data);
-  })
-});
+io.on('connection', con.onconnection);
 io.on('disconnection', () => {
   console.log('user disconnected');
 })
