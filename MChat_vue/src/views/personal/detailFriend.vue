@@ -37,7 +37,7 @@
 
 <script>
 import {getUser} from '@/api/user'
-import {isFriend, addFriend} from '@/api/friend'
+import {isFriend} from '@/api/friend'
 import mApheader from '@/views/components/mApheader.vue'
 export default {
   name: 'detailFriend',
@@ -77,14 +77,7 @@ export default {
       })
     },
     handleAddFriend () {
-      let account = this.friendInfo.account
-      addFriend({account}).then(res => {
-        if (res.code === 0) {
-          this.$message({type: 'success', message: res.message})
-        } else {
-          this.$message({type: 'error', message: res.message})
-        }
-      })
+      this.$router.push({name: 'applyFriend', params: {id: this.$route.params.id}})
     },
     handleDelFriend () {
 
@@ -102,6 +95,7 @@ export default {
     position: absolute;
     top: 165px;
     height: calc(100% - 165px);
+    width: 100%
   }
 }
 .info-header{

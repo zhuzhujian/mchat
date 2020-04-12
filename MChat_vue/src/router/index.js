@@ -42,6 +42,11 @@ export const constantRoutes = [
             path: 'detial/:id',
             name: 'friendDetial',
             component: () => import('@/views/personal/detailFriend')
+          },
+          {
+            path: 'apply',
+            name: 'applyFriend',
+            component: () => import('@/views/personal/components/applyFriend')
           }
         ]
       },
